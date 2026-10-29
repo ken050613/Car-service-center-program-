@@ -1,8 +1,8 @@
-package apu.repository;
+package com.apu.asc.repository;
 
-import apu.model.CustomerStaffComments;
-import apu.persistence.DataPaths;
-import apu.persistence.TextLineFiles;
+import com.apu.asc.model.CustomerStaffComments;
+import com.apu.asc.persistence.DataPaths;
+import com.apu.asc.persistence.TextLineFiles;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

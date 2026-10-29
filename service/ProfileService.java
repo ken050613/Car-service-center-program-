@@ -1,9 +1,9 @@
-package apu.service;
+package com.apu.asc.service;
 
-import apu.model.*;
-import apu.repository.UserRepository;
-import apu.util.PasswordUtil;
-import apu.util.ValidationUtil;
+import com.apu.asc.model.*;
+import com.apu.asc.repository.UserRepository;
+import com.apu.asc.util.PasswordUtil;
+import com.apu.asc.util.ValidationUtil;
 
 import java.io.IOException;
 

@@ -1,7 +1,7 @@
-package apu.bootstrap;
+package com.apu.asc.bootstrap;
 
-import apu.repository.*;
-import apu.service.*;
+import com.apu.asc.repository.*;
+import com.apu.asc.service.*;
 
 public record AscServices(
         UserRepository users,
@@ -20,6 +20,5 @@ public record AscServices(
         AppointmentService appointmentsSvc,
         PaymentService paymentsSvc,
         FeedbackService feedbackSvc,
-        ReportService reports,
-        AccountAuditService accountAudit
+        ReportService reports
 ) {}

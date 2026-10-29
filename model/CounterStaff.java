@@ -1,4 +1,4 @@
-package apu.model;
+package com.apu.asc.model;
 
 public class CounterStaff extends User {
     public CounterStaff(String id, String username, String passwordHash, String fullName, String email) {

@@ -1,4 +1,4 @@
-package apu.persistence;
+package com.apu.asc.persistence;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -41,9 +41,5 @@ public final class DataPaths {
 
     public static Path customerStaffComments() {
         return ROOT.resolve("customer_staff_comments.txt");
-    }
-
-    public static Path accountAudit() {
-        return ROOT.resolve("account_audit.txt");
     }
 }

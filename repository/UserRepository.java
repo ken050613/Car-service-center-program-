@@ -1,9 +1,9 @@
-package apu.repository;
+package com.apu.asc.repository;
 
-import apu.model.*;
-import apu.persistence.DataPaths;
-import apu.persistence.TextLineFiles;
-import apu.persistence.UserDatabase;
+import com.apu.asc.model.*;
+import com.apu.asc.persistence.DataPaths;
+import com.apu.asc.persistence.TextLineFiles;
+import com.apu.asc.persistence.UserDatabase;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

@@ -1,12 +1,12 @@
-package apu.service;
+package com.apu.asc.service;
 
-import apu.model.Appointment;
-import apu.model.AppointmentStatus;
-import apu.model.Payment;
-import apu.model.ServiceKind;
-import apu.repository.AppointmentRepository;
-import apu.repository.FeedbackRepository;
-import apu.repository.PaymentRepository;
+import com.apu.asc.model.Appointment;
+import com.apu.asc.model.AppointmentStatus;
+import com.apu.asc.model.Payment;
+import com.apu.asc.model.ServiceKind;
+import com.apu.asc.repository.AppointmentRepository;
+import com.apu.asc.repository.FeedbackRepository;
+import com.apu.asc.repository.PaymentRepository;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

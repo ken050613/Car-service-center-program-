@@ -1,4 +1,4 @@
-package apu.gui;
+package com.apu.asc.gui;
 
 /**
  * Combo box entry: stable {@link #id()} for services, {@link #label()} for display.

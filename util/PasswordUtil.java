@@ -1,4 +1,4 @@
-package apu.util;
+package com.apu.asc.util;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

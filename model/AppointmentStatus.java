@@ -1,4 +1,4 @@
-package apu.model;
+package com.apu.asc.model;
 
 public enum AppointmentStatus {
     SCHEDULED,

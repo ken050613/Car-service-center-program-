@@ -1,16 +1,15 @@
-package apu.service;
+package com.apu.asc.service;
 
-import apu.model.*;
-import apu.repository.AppointmentRepository;
-import apu.repository.CatalogRepository;
-import apu.repository.PaymentRepository;
-import apu.repository.UserRepository;
-import apu.util.IdGenerator;
+import com.apu.asc.model.*;
+import com.apu.asc.repository.AppointmentRepository;
+import com.apu.asc.repository.CatalogRepository;
+import com.apu.asc.repository.PaymentRepository;
+import com.apu.asc.repository.UserRepository;
+import com.apu.asc.util.IdGenerator;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 public class PaymentService {
@@ -25,21 +24,6 @@ public class PaymentService {
         this.appointments = appointments;
         this.catalog = catalog;
         this.users = users;
-    }
-
-    /** Same pricing as {@link #quoteTotal(Appointment)} before an appointment row exists (booking form). */
-    public BigDecimal quoteBookingTotal(ServiceKind primaryKind, List<String> addOnServiceCodes) {
-        ServiceKind tier = primaryKind != null ? primaryKind : ServiceKind.NORMAL;
-        BigDecimal base = catalog.find(tier.catalogCode()).map(ServiceItem::getUnitPrice).orElse(BigDecimal.ZERO);
-        BigDecimal addOns = BigDecimal.ZERO;
-        for (String code : addOnServiceCodes) {
-            if (code.equalsIgnoreCase(ServiceKind.NORMAL.catalogCode())
-                    || code.equalsIgnoreCase(ServiceKind.MAJOR.catalogCode())) {
-                continue;
-            }
-            addOns = addOns.add(catalog.find(code).map(ServiceItem::getUnitPrice).orElse(BigDecimal.ZERO));
-        }
-        return base.add(addOns);
     }
 
     /**

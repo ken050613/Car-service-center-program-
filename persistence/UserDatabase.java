@@ -1,14 +1,14 @@
-package apu.persistence;
+package com.apu.asc.persistence;
 
-import apu.model.CounterStaff;
-import apu.model.Customer;
-import apu.model.Manager;
-import apu.model.Technician;
+import com.apu.asc.model.CounterStaff;
+import com.apu.asc.model.Customer;
+import com.apu.asc.model.Manager;
+import com.apu.asc.model.Technician;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/** In-memory aggregate of all user subtypes (persisted as plain text in {@link apu.repository.UserRepository}). */
+/** In-memory aggregate of all user subtypes (persisted as plain text in {@link com.apu.asc.repository.UserRepository}). */
 public class UserDatabase {
     private List<Manager> managers = new ArrayList<>();
     private List<CounterStaff> counterStaff = new ArrayList<>();

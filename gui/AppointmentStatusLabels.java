@@ -1,6 +1,6 @@
-package apu.gui;
+package com.apu.asc.gui;
 
-import apu.model.AppointmentStatus;
+import com.apu.asc.model.AppointmentStatus;
 
 /** Short labels for appointment tables (easy to see if work is finished). */
 public final class AppointmentStatusLabels {

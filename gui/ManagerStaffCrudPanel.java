@@ -1,6 +1,6 @@
-package apu.gui;
+package com.apu.asc.gui;
 
-import apu.model.*;
+import com.apu.asc.model.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;

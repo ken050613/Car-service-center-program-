@@ -1,9 +1,9 @@
-package apu.repository;
+package com.apu.asc.repository;
 
-import apu.model.ServiceItem;
-import apu.model.ServiceKind;
-import apu.persistence.DataPaths;
-import apu.persistence.TextLineFiles;
+import com.apu.asc.model.ServiceItem;
+import com.apu.asc.model.ServiceKind;
+import com.apu.asc.persistence.DataPaths;
+import com.apu.asc.persistence.TextLineFiles;
 
 import java.io.IOException;
 import java.math.BigDecimal;

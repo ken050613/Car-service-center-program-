@@ -1,7 +1,7 @@
-package apu.gui;
+package com.apu.asc.gui;
 
-import apu.model.User;
-import apu.repository.UserRepository;
+import com.apu.asc.model.User;
+import com.apu.asc.repository.UserRepository;
 
 /**
  * Turns user ids in tables into readable labels (full name + username).

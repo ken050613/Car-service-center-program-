@@ -1,11 +1,10 @@
-package apu.service;
+package com.apu.asc.service;
 
-import apu.model.*;
-import apu.repository.AppointmentRepository;
-import apu.repository.PaymentRepository;
-import apu.repository.UserRepository;
-import apu.util.IdGenerator;
-import apu.util.ValidationUtil;
+import com.apu.asc.model.*;
+import com.apu.asc.repository.AppointmentRepository;
+import com.apu.asc.repository.UserRepository;
+import com.apu.asc.util.IdGenerator;
+import com.apu.asc.util.ValidationUtil;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -15,12 +14,10 @@ import java.util.Optional;
 public class AppointmentService {
     private final AppointmentRepository appointments;
     private final UserRepository users;
-    private final PaymentRepository payments;
 
-    public AppointmentService(AppointmentRepository appointments, UserRepository users, PaymentRepository payments) {
+    public AppointmentService(AppointmentRepository appointments, UserRepository users) {
         this.appointments = appointments;
         this.users = users;
-        this.payments = payments;
     }
 
     public Appointment createAppointment(String customerId, String vehicleDescription, ServiceKind primaryKind,
@@ -134,28 +131,5 @@ public class AppointmentService {
 
     public Optional<Appointment> find(String id) {
         return appointments.findById(id);
-    }
-
-    public Appointment cancelAppointment(String appointmentId, String actorUserId, Role actorRole) throws IOException {
-        Appointment a = appointments.findById(appointmentId)
-                .orElseThrow(() -> new IllegalArgumentException("Appointment not found."));
-        if (actorRole == Role.CUSTOMER && !actorUserId.equals(a.getCustomerId())) {
-            throw new SecurityException("You can only cancel your own appointments.");
-        }
-        if (actorRole == Role.TECHNICIAN) {
-            throw new SecurityException("Cancellation is not available from the technician portal.");
-        }
-        if (a.getStatus() == AppointmentStatus.CANCELLED) {
-            throw new IllegalStateException("Already cancelled.");
-        }
-        if (a.getStatus() == AppointmentStatus.COMPLETED) {
-            throw new IllegalStateException("Cannot cancel a completed appointment.");
-        }
-        if (payments.findByAppointmentId(appointmentId).isPresent()) {
-            throw new IllegalStateException("Cannot cancel: a payment exists for this appointment.");
-        }
-        a.setStatus(AppointmentStatus.CANCELLED);
-        appointments.update(a);
-        return a;
     }
 }

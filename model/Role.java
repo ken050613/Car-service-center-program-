@@ -1,4 +1,4 @@
-package apu.model;
+package com.apu.asc.model;
 
 /**
  * Identifies the four end-user types for APU-ASC.

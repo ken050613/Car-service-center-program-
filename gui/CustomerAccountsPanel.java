@@ -1,12 +1,10 @@
-package apu.gui;
+package com.apu.asc.gui;
 
-import apu.model.Customer;
-import apu.model.User;
+import com.apu.asc.model.Customer;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.io.IOException;
 
 /**
  * Customer list with add / edit / delete — shared by counter staff and manager.
@@ -52,31 +50,12 @@ public class CustomerAccountsPanel extends JPanel {
                 return;
             }
             String id = (String) custModel.getValueAt(r, 0);
-            String username = (String) custModel.getValueAt(r, 1);
-            JTextField reason = new JTextField(36);
-            JPanel ask = new JPanel(new BorderLayout(0, 8));
-            ask.add(new JLabel("Reason (required, saved for manager):"), BorderLayout.NORTH);
-            ask.add(reason, BorderLayout.CENTER);
-            if (JOptionPane.showConfirmDialog(this, ask, "Delete customer", JOptionPane.OK_CANCEL_OPTION,
-                    JOptionPane.PLAIN_MESSAGE) != JOptionPane.OK_OPTION) {
-                return;
-            }
-            String rs = reason.getText().trim();
-            if (rs.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please enter a reason for the audit log.", "Delete",
-                        JOptionPane.WARNING_MESSAGE);
+            if (JOptionPane.showConfirmDialog(this, "Delete this customer?", "Confirm", JOptionPane.OK_CANCEL_OPTION)
+                    != JOptionPane.OK_OPTION) {
                 return;
             }
             try {
-                User actor = frame.getCurrentUser();
                 frame.getServices().customerMgmt().deleteCustomer(id);
-                try {
-                    frame.getServices().accountAudit().log(actor, "DELETE", id, username, "account removed", rs);
-                } catch (IOException ioe) {
-                    JOptionPane.showMessageDialog(this,
-                            "Customer removed, but audit log failed: " + ioe.getMessage(),
-                            "Warning", JOptionPane.WARNING_MESSAGE);
-                }
                 refreshTable();
                 notifyChanged();
             } catch (Exception ex) {
@@ -180,26 +159,14 @@ public class CustomerAccountsPanel extends JPanel {
             }
 
             try {
-                User actor = frame.getCurrentUser();
                 if (existing == null) {
                     String pe = AccountFormValidation.validateNewPasswords(p1, p2);
                     if (pe != null) {
                         AccountFormValidation.warn(this, pe);
                         continue;
                     }
-                    Customer created = frame.getServices().customerMgmt().createCustomer(
+                    frame.getServices().customerMgmt().createCustomer(
                             draftU, p1, draftName, draftEmail, draftPhone, draftReg);
-                    try {
-                        frame.getServices().accountAudit().log(actor, "CREATE", created.getId(), created.getUsername(),
-                                "new customer account", "");
-                    } catch (IOException ioe) {
-                        JOptionPane.showMessageDialog(this,
-                                "Saved, but audit log failed: " + ioe.getMessage(),
-                                "Warning", JOptionPane.WARNING_MESSAGE);
-                        refreshTable();
-                        notifyChanged();
-                        return;
-                    }
                 } else {
                     String pe = AccountFormValidation.validateOptionalPasswordChange(p1, p2);
                     if (pe != null) {
@@ -209,17 +176,6 @@ public class CustomerAccountsPanel extends JPanel {
                     frame.getServices().customerMgmt().updateCustomer(
                             existing.getId(), draftU, draftName, draftEmail, draftPhone, draftReg,
                             AccountFormValidation.isBlank(p1) ? null : p1);
-                    try {
-                        frame.getServices().accountAudit().log(actor, "UPDATE", existing.getId(), draftU,
-                                "profile or credentials updated", "");
-                    } catch (IOException ioe) {
-                        JOptionPane.showMessageDialog(this,
-                                "Saved, but audit log failed: " + ioe.getMessage(),
-                                "Warning", JOptionPane.WARNING_MESSAGE);
-                        refreshTable();
-                        notifyChanged();
-                        return;
-                    }
                 }
                 refreshTable();
                 notifyChanged();

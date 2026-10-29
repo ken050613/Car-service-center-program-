@@ -1,11 +1,11 @@
-package apu.repository;
+package com.apu.asc.repository;
 
-import apu.model.Appointment;
-import apu.model.AppointmentStatus;
-import apu.model.ServiceKind;
-import apu.persistence.DataPaths;
-import apu.persistence.TextLineFiles;
-import apu.util.ServiceCodeParser;
+import com.apu.asc.model.Appointment;
+import com.apu.asc.model.AppointmentStatus;
+import com.apu.asc.model.ServiceKind;
+import com.apu.asc.persistence.DataPaths;
+import com.apu.asc.persistence.TextLineFiles;
+import com.apu.asc.util.ServiceCodeParser;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

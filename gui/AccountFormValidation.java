@@ -1,4 +1,4 @@
-package apu.gui;
+package com.apu.asc.gui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +10,7 @@ public final class AccountFormValidation {
     private AccountFormValidation() {}
 
     public static void warn(Component parent, String message) {
-        JOptionPane.showMessageDialog(parent, message, "Input", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(parent, message, "Check your input", JOptionPane.WARNING_MESSAGE);
     }
 
     public static boolean isBlank(String s) {

@@ -1,4 +1,4 @@
-package apu.model;
+package com.apu.asc.model;
 
 public class Customer extends User {
     private String phone;

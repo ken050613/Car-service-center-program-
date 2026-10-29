@@ -1,20 +1,18 @@
-package apu.gui;
+package com.apu.asc.gui;
 
-import apu.model.Appointment;
-import apu.model.AppointmentStatus;
-import apu.model.Customer;
-import apu.model.Role;
-import apu.model.CustomerStaffComments;
-import apu.model.Feedback;
-import apu.model.Payment;
-import apu.model.ServiceKind;
-import apu.model.TechnicianJobFeedback;
-import apu.model.User;
+import com.apu.asc.model.Appointment;
+import com.apu.asc.model.AppointmentStatus;
+import com.apu.asc.model.Customer;
+import com.apu.asc.model.CustomerStaffComments;
+import com.apu.asc.model.Feedback;
+import com.apu.asc.model.Payment;
+import com.apu.asc.model.ServiceKind;
+import com.apu.asc.model.TechnicianJobFeedback;
+import com.apu.asc.model.User;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class CustomerPanel extends JPanel {
@@ -45,8 +43,6 @@ public class CustomerPanel extends JPanel {
 
     private final JComboBox<IdLabelOption> ratingApptCombo = new JComboBox<>();
     private final JComboBox<IdLabelOption> staffCommentApptCombo = new JComboBox<>();
-    private final JComboBox<IdLabelOption> cancelApptCombo = new JComboBox<>();
-    private Runnable refreshBookPriceEstimate;
 
     private final DefaultTableModel summaryModel = new DefaultTableModel(
             new Object[]{"Appointment", "Rating", "Your comment", "Tech feedback", "Counter comment", "Tech comment"}, 0) {
@@ -68,13 +64,13 @@ public class CustomerPanel extends JPanel {
         top.add(logout, BorderLayout.EAST);
 
         JTabbedPane tabs = new JTabbedPane();
-        tabs.addTab("Book", buildBook());
-        tabs.addTab("Appointments", buildAppts());
-        tabs.addTab("Payments", buildPayments());
-        tabs.addTab("Rate", buildRating());
-        tabs.addTab("Comments", buildStaffComments());
-        tabs.addTab("Feedback", buildSummary());
-        tabs.addTab("Profile", buildProfile());
+        tabs.addTab("Book appointment", buildBook());
+        tabs.addTab("My appointments", buildAppts());
+        tabs.addTab("Payment history", buildPayments());
+        tabs.addTab("Rate service (1–5)", buildRating());
+        tabs.addTab("Comments: counter & technician", buildStaffComments());
+        tabs.addTab("View appointment feedback", buildSummary());
+        tabs.addTab("My profile", buildProfile());
 
         add(top, BorderLayout.NORTH);
         add(tabs, BorderLayout.CENTER);
@@ -82,9 +78,6 @@ public class CustomerPanel extends JPanel {
 
     public void onShow() {
         bookAddOnPicker.reload(frame);
-        if (refreshBookPriceEstimate != null) {
-            refreshBookPriceEstimate.run();
-        }
         refreshAppointments();
         refreshPayments();
         refreshSummary();
@@ -116,23 +109,8 @@ public class CustomerPanel extends JPanel {
         g.anchor = GridBagConstraints.WEST;
         JTextField veh = new JTextField(28);
         JComboBox<ServiceKind> tier = new JComboBox<>(ServiceKind.values());
-        ScheduleDateTimePicker schedulePicker = new ScheduleDateTimePicker(frame);
+        ScheduleDateTimePicker schedulePicker = new ScheduleDateTimePicker();
         JTextField notes = new JTextField(28);
-        JLabel bookTotalLabel = new JLabel(" ");
-        bookTotalLabel.setForeground(new Color(0, 100, 40));
-        Runnable updateBookTotal = () -> {
-            try {
-                ServiceKind k = (ServiceKind) tier.getSelectedItem();
-                BigDecimal total = frame.getServices().paymentsSvc().quoteBookingTotal(k, bookAddOnPicker.getSelectedCodes());
-                bookTotalLabel.setText("Total (pay after service): " + total.toPlainString());
-            } catch (Exception ex) {
-                bookTotalLabel.setText("Total: —");
-            }
-        };
-        bookAddOnPicker.setOnSelectionChange(updateBookTotal);
-        tier.addActionListener(e -> updateBookTotal.run());
-        this.refreshBookPriceEstimate = updateBookTotal;
-        updateBookTotal.run();
         int y = 0;
         g.gridx = 0;
         g.gridy = y;
@@ -167,13 +145,6 @@ public class CustomerPanel extends JPanel {
         p.add(new JLabel("Notes"), g);
         g.gridx = 1;
         p.add(notes, g);
-        g.gridx = 0;
-        g.gridy = ++y;
-        p.add(new JLabel("Total"), g);
-        g.gridx = 1;
-        g.anchor = GridBagConstraints.WEST;
-        p.add(bookTotalLabel, g);
-        g.anchor = GridBagConstraints.WEST;
         JButton go = new JButton("Submit");
         go.addActionListener(e -> {
             Customer c = (Customer) frame.getCurrentUser();
@@ -189,11 +160,9 @@ public class CustomerPanel extends JPanel {
                         notes.getText().trim(),
                         null
                 );
-                BigDecimal quoted = frame.getServices().paymentsSvc().quoteTotal(a);
                 refreshAppointments();
                 refreshCustomerCompletedAppointmentCombos();
-                JOptionPane.showMessageDialog(this, "Appointment ID: " + a.getId()
-                        + "\nEstimated total: " + quoted.toPlainString());
+                JOptionPane.showMessageDialog(this, "Appointment ID: " + a.getId());
             } catch (java.time.format.DateTimeParseException ex) {
                 JOptionPane.showMessageDialog(this, "Use format yyyy-MM-dd HH:mm (or use the picker).", "Invalid date", JOptionPane.WARNING_MESSAGE);
             } catch (Exception ex) {
@@ -209,43 +178,15 @@ public class CustomerPanel extends JPanel {
 
     private JPanel buildAppts() {
         JPanel p = new JPanel(new BorderLayout(8, 8));
-        JLabel hint = new JLabel("You can cancel here if the job is not paid and not completed.");
+        JLabel hint = new JLabel(
+                "<html><body style='width:520px'><b>Status</b> shows your booking progress. "
+                        + "<b>Work finished?</b> is Yes when the technician has completed the service.</body></html>");
         JTable t = new JTable(apptModel);
         p.add(hint, BorderLayout.NORTH);
         p.add(new JScrollPane(t), BorderLayout.CENTER);
-        JPanel south = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JButton ref = new JButton("Refresh");
         ref.addActionListener(e -> refreshAppointments());
-        south.add(ref);
-        south.add(new JLabel("  Cancel:"));
-        cancelApptCombo.setPrototypeDisplayValue(
-                new IdLabelOption("id", "appt-id — SCHEDULED"));
-        south.add(cancelApptCombo);
-        JButton cancelAppt = new JButton("Cancel appointment");
-        cancelAppt.addActionListener(e -> {
-            Customer c = (Customer) frame.getCurrentUser();
-            IdLabelOption sel = (IdLabelOption) cancelApptCombo.getSelectedItem();
-            if (sel == null) {
-                JOptionPane.showMessageDialog(this, "No cancellable appointments (refresh if needed).",
-                        "Cancel", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            if (JOptionPane.showConfirmDialog(this,
-                    "Cancel this appointment? It cannot be restored.",
-                    "Confirm cancellation", JOptionPane.OK_CANCEL_OPTION) != JOptionPane.OK_OPTION) {
-                return;
-            }
-            try {
-                frame.getServices().appointmentsSvc().cancelAppointment(sel.id(), c.getId(), Role.CUSTOMER);
-                refreshAppointments();
-                refreshCustomerCompletedAppointmentCombos();
-                JOptionPane.showMessageDialog(this, "Appointment cancelled.");
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-        south.add(cancelAppt);
-        p.add(south, BorderLayout.SOUTH);
+        p.add(ref, BorderLayout.SOUTH);
         return p;
     }
 
@@ -489,28 +430,6 @@ public class CustomerPanel extends JPanel {
         }
     }
 
-    private boolean canCancelAppointment(Appointment a) {
-        if (a.getStatus() == AppointmentStatus.COMPLETED || a.getStatus() == AppointmentStatus.CANCELLED) {
-            return false;
-        }
-        return frame.getServices().paymentsSvc().findPaymentForAppointment(a.getId()).isEmpty();
-    }
-
-    private void refreshCancelApptCombo() {
-        cancelApptCombo.removeAllItems();
-        String cid = frame.getCurrentUser().getId();
-        for (Appointment a : frame.getServices().appointmentsSvc().listForCustomer(cid)) {
-            if (!canCancelAppointment(a)) {
-                continue;
-            }
-            String veh = a.getVehicleDescription() != null && !a.getVehicleDescription().isBlank()
-                    ? a.getVehicleDescription()
-                    : "(no vehicle note)";
-            String label = a.getId() + " — " + AppointmentStatusLabels.friendly(a.getStatus()) + " — " + veh;
-            cancelApptCombo.addItem(new IdLabelOption(a.getId(), label));
-        }
-    }
-
     private void refreshAppointments() {
         apptModel.setRowCount(0);
         String cid = frame.getCurrentUser().getId();
@@ -528,7 +447,6 @@ public class CustomerPanel extends JPanel {
                     String.join(", ", a.getServiceCodes())
             });
         }
-        refreshCancelApptCombo();
     }
 
     private void refreshPayments() {

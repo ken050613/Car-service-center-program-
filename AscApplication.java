@@ -1,7 +1,7 @@
-package apu;
+package com.apu.asc;
 
-import apu.bootstrap.AscBootstrap;
-import apu.ui.ConsoleUi;
+import com.apu.asc.bootstrap.AscBootstrap;
+import com.apu.asc.ui.ConsoleUi;
 
 public final class AscApplication {
     public static void main(String[] args) {

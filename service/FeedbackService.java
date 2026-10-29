@@ -1,13 +1,13 @@
-package apu.service;
+package com.apu.asc.service;
 
-import apu.model.*;
-import apu.repository.AppointmentRepository;
-import apu.repository.CustomerStaffCommentRepository;
-import apu.repository.FeedbackRepository;
-import apu.repository.TechnicianFeedbackRepository;
-import apu.repository.UserRepository;
-import apu.util.IdGenerator;
-import apu.util.ValidationUtil;
+import com.apu.asc.model.*;
+import com.apu.asc.repository.AppointmentRepository;
+import com.apu.asc.repository.CustomerStaffCommentRepository;
+import com.apu.asc.repository.FeedbackRepository;
+import com.apu.asc.repository.TechnicianFeedbackRepository;
+import com.apu.asc.repository.UserRepository;
+import com.apu.asc.util.IdGenerator;
+import com.apu.asc.util.ValidationUtil;
 
 import java.io.IOException;
 import java.time.LocalDateTime;

@@ -1,7 +1,7 @@
-package apu.service;
+package com.apu.asc.service;
 
-import apu.model.ServiceItem;
-import apu.repository.CatalogRepository;
+import com.apu.asc.model.ServiceItem;
+import com.apu.asc.repository.CatalogRepository;
 
 import java.io.IOException;
 import java.math.BigDecimal;

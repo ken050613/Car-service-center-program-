@@ -1,8 +1,8 @@
-package apu.gui;
+package com.apu.asc.gui;
 
-import apu.model.Appointment;
-import apu.model.Technician;
-import apu.model.User;
+import com.apu.asc.model.Appointment;
+import com.apu.asc.model.Technician;
+import com.apu.asc.model.User;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -58,7 +58,7 @@ public class TechnicianPanel extends JPanel {
         });
 
         JTextArea techFb = new JTextArea(3, 40);
-        JButton inProgress = new JButton("Start");
+        JButton inProgress = new JButton("Start work (In progress)");
         inProgress.addActionListener(e -> {
             try {
                 IdLabelOption sel = selectedWorkAppointment();
@@ -75,7 +75,7 @@ public class TechnicianPanel extends JPanel {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
-        JButton complete = new JButton("Done");
+        JButton complete = new JButton("Mark COMPLETED");
         complete.addActionListener(e -> {
             try {
                 IdLabelOption sel = selectedWorkAppointment();
@@ -92,7 +92,7 @@ public class TechnicianPanel extends JPanel {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
-        JButton sendFb = new JButton("Save feedback");
+        JButton sendFb = new JButton("Submit feedback on appointment");
         sendFb.addActionListener(e -> {
             try {
                 IdLabelOption sel = selectedWorkAppointment();
@@ -118,7 +118,7 @@ public class TechnicianPanel extends JPanel {
         g.gridwidth = 2;
         g.gridx = 0;
         g.gridy = 0;
-        actions.add(new JLabel("Appointment"), g);
+        actions.add(new JLabel("Appointment (select from list or table)"), g);
         g.gridy = 1;
         actions.add(workApptCombo, g);
         g.gridy = 2;
@@ -126,7 +126,7 @@ public class TechnicianPanel extends JPanel {
         g.gridy = 3;
         actions.add(complete, g);
         g.gridy = 4;
-        actions.add(new JLabel("Feedback"), g);
+        actions.add(new JLabel("Your job feedback / notes"), g);
         g.gridy = 5;
         actions.add(new JScrollPane(techFb), g);
         g.gridy = 6;
@@ -145,7 +145,9 @@ public class TechnicianPanel extends JPanel {
         JPanel refRow = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         refRow.add(ref);
 
-        JLabel workHint = new JLabel("Start when you begin the job, Done when finished.");
+        JLabel workHint = new JLabel(
+                "<html><body style='width:520px'><b>Status</b> and <b>Work finished?</b> show job progress. "
+                        + "Use <b>Start work</b> when you begin, then <b>Mark COMPLETED</b> when done.</body></html>");
         JPanel workNorth = new JPanel(new BorderLayout(0, 6));
         workNorth.add(refRow, BorderLayout.NORTH);
         workNorth.add(workHint, BorderLayout.SOUTH);
@@ -155,8 +157,8 @@ public class TechnicianPanel extends JPanel {
         workTab.add(work, BorderLayout.CENTER);
 
         JTabbedPane tabs = new JTabbedPane();
-        tabs.addTab("Work", workTab);
-        tabs.addTab("Profile", buildProfileTab());
+        tabs.addTab("Assigned work", workTab);
+        tabs.addTab("My profile", buildProfileTab());
 
         add(top, BorderLayout.NORTH);
         add(tabs, BorderLayout.CENTER);

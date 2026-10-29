@@ -1,4 +1,4 @@
-package apu.model;
+package com.apu.asc.model;
 
 public class Technician extends User {
     private String specialty;

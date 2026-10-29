@@ -1,7 +1,7 @@
-package apu.gui;
+package com.apu.asc.gui;
 
-import apu.model.ServiceItem;
-import apu.model.ServiceKind;
+import com.apu.asc.model.ServiceItem;
+import com.apu.asc.model.ServiceKind;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,26 +14,14 @@ import java.util.List;
 public class AddonCatalogPicker extends JPanel {
     private final JPanel checksHost = new JPanel();
     private final List<JCheckBox> boxes = new ArrayList<>();
-    private Runnable onSelectionChange;
 
     public AddonCatalogPicker() {
         super(new BorderLayout(4, 4));
         checksHost.setLayout(new BoxLayout(checksHost, BoxLayout.Y_AXIS));
         JScrollPane sp = new JScrollPane(checksHost);
         sp.setPreferredSize(new Dimension(360, 120));
-        sp.setBorder(BorderFactory.createTitledBorder("Add-ons"));
+        sp.setBorder(BorderFactory.createTitledBorder("Optional add-ons (tick any)"));
         add(sp, BorderLayout.CENTER);
-    }
-
-    /** Fired when any add-on checkbox is toggled (after {@link #reload(MainFrame)}). */
-    public void setOnSelectionChange(Runnable onSelectionChange) {
-        this.onSelectionChange = onSelectionChange;
-    }
-
-    private void notifySelectionChange() {
-        if (onSelectionChange != null) {
-            onSelectionChange.run();
-        }
     }
 
     /** Reload from manager catalogue. Safe to call on every dashboard show. */
@@ -50,7 +38,6 @@ public class AddonCatalogPicker extends JPanel {
             JCheckBox cb = new JCheckBox(
                     code + " — " + it.getDescription() + "  (" + it.getUnitPrice() + ")");
             cb.putClientProperty("code", code);
-            cb.addActionListener(e -> notifySelectionChange());
             boxes.add(cb);
             checksHost.add(cb);
         }

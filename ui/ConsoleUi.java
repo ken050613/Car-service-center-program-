@@ -1,9 +1,9 @@
-package apu.ui;
+package com.apu.asc.ui;
 
-import apu.bootstrap.AscServices;
-import apu.model.*;
-import apu.util.PasswordUtil;
-import apu.util.ServiceCodeParser;
+import com.apu.asc.bootstrap.AscServices;
+import com.apu.asc.model.*;
+import com.apu.asc.util.PasswordUtil;
+import com.apu.asc.util.ServiceCodeParser;
 
 import java.io.IOException;
 import java.math.BigDecimal;

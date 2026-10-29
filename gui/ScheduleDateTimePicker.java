@@ -1,45 +1,33 @@
-package apu.gui;
+package com.apu.asc.gui;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 /**
- * Text field plus calendar; time is chosen as hourly slots (one segment per registered technician).
+ * Text field plus button to open a calendar (month grid) and clock (hour/minute spinners).
  */
 public class ScheduleDateTimePicker extends JPanel {
     public static final DateTimeFormatter DISPLAY = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     private final JTextField field = new JTextField(18);
-    private final MainFrame frameOrNull;
 
     public ScheduleDateTimePicker() {
-        this(null);
-    }
-
-    public ScheduleDateTimePicker(MainFrame frame) {
-        this.frameOrNull = frame;
         LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
         field.setText(DISPLAY.format(now));
         field.setToolTipText("You can type yyyy-MM-dd HH:mm or use the picker");
-        JButton pick = new JButton("Pick…");
+        JButton pick = new JButton("Pick date & time…");
         pick.addActionListener(e -> {
             Window w = SwingUtilities.getWindowAncestor(this);
             if (w == null) {
                 w = JOptionPane.getRootFrame();
             }
-            int slots = 1;
-            if (frameOrNull != null) {
-                long n = frameOrNull.getServices().users().technicians().count();
-                slots = (int) Math.max(1L, n);
-            }
-            SchedulePickerDialog.open(w, field, slots);
+            SchedulePickerDialog.open(w, field);
         });
         setLayout(new FlowLayout(FlowLayout.LEFT, 8, 0));
         add(field);
@@ -57,18 +45,16 @@ public class ScheduleDateTimePicker extends JPanel {
 
 final class SchedulePickerDialog extends JDialog {
     private final JTextField targetField;
-    private final int slotCount;
     private final JComboBox<Month> monthBox = new JComboBox<>(Month.values());
     private final JSpinner yearSpin = new JSpinner(new SpinnerNumberModel(2026, 2020, 2040, 1));
     private final JSpinner hourSpin = new JSpinner(new SpinnerNumberModel(9, 0, 23, 1));
-    private final JComboBox<String> slotCombo = new JComboBox<>();
+    private final JSpinner minuteSpin = new JSpinner(new SpinnerNumberModel(0, 0, 59, 1));
     private final JPanel gridPanel = new JPanel(new GridLayout(7, 7, 3, 3));
     private int selectedDay;
 
-    private SchedulePickerDialog(Window owner, JTextField targetField, int techSlotCount) {
-        super(owner, "Date & time", ModalityType.APPLICATION_MODAL);
+    private SchedulePickerDialog(Window owner, JTextField targetField) {
+        super(owner, "Choose date and time", ModalityType.APPLICATION_MODAL);
         this.targetField = targetField;
-        this.slotCount = Math.max(1, techSlotCount);
         LocalDateTime initial;
         try {
             initial = LocalDateTime.parse(targetField.getText().trim(), ScheduleDateTimePicker.DISPLAY);
@@ -79,6 +65,7 @@ final class SchedulePickerDialog extends JDialog {
         yearSpin.setValue(initial.getYear());
         selectedDay = initial.getDayOfMonth();
         hourSpin.setValue(initial.getHour());
+        minuteSpin.setValue(initial.getMinute());
 
         JPanel root = new JPanel(new BorderLayout(8, 8));
         root.setBorder(new EmptyBorder(12, 12, 12, 12));
@@ -96,10 +83,11 @@ final class SchedulePickerDialog extends JDialog {
         calWrap.add(gridPanel, BorderLayout.CENTER);
 
         JPanel timeRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 4));
-        timeRow.add(new JLabel("Hour (24h)"));
+        timeRow.add(new JLabel("Clock (24-hour)"));
+        timeRow.add(new JLabel("Hour:"));
         timeRow.add(hourSpin);
-        timeRow.add(new JLabel("Slot (" + this.slotCount + " per hour)"));
-        timeRow.add(slotCombo);
+        timeRow.add(new JLabel("Minute:"));
+        timeRow.add(minuteSpin);
 
         JPanel south = new JPanel(new BorderLayout(0, 8));
         south.add(timeRow, BorderLayout.NORTH);
@@ -123,55 +111,9 @@ final class SchedulePickerDialog extends JDialog {
         next.addActionListener(e -> shiftMonth(1));
 
         pack();
-        setMinimumSize(new Dimension(420, 420));
+        setMinimumSize(new Dimension(380, 400));
         setLocationRelativeTo(owner);
         rebuild.run();
-        rebuildSlotComboSelectMinute(initial.getMinute());
-        hourSpin.addChangeListener(e -> {
-            if (slotCombo.getItemCount() == 0) {
-                return;
-            }
-            int idx = Math.max(0, slotCombo.getSelectedIndex());
-            rebuildSlotCombo();
-            int max = slotCombo.getItemCount() - 1;
-            slotCombo.setSelectedIndex(Math.min(idx, max));
-        });
-    }
-
-    private int spanMinutes() {
-        return Math.max(1, 60 / slotCount);
-    }
-
-    private int minuteToSlotIndex(int minute) {
-        int span = spanMinutes();
-        for (int i = 0; i < slotCount; i++) {
-            int start = i * span;
-            int end = (i == slotCount - 1) ? 60 : (i + 1) * span;
-            if (minute >= start && minute < end) {
-                return i;
-            }
-        }
-        return Math.min(slotCount - 1, minute / span);
-    }
-
-    private int selectedSlotStartMinute() {
-        int idx = Math.max(0, slotCombo.getSelectedIndex());
-        return idx * spanMinutes();
-    }
-
-    private void rebuildSlotComboSelectMinute(int minute) {
-        rebuildSlotCombo();
-        slotCombo.setSelectedIndex(minuteToSlotIndex(minute));
-    }
-
-    private void rebuildSlotCombo() {
-        slotCombo.removeAllItems();
-        int h = (Integer) hourSpin.getValue();
-        int span = spanMinutes();
-        for (int i = 0; i < slotCount; i++) {
-            int m = i * span;
-            slotCombo.addItem(String.format("Slot %d — %02d:%02d", i + 1, h, m));
-        }
     }
 
     private void shiftMonth(int delta) {
@@ -243,8 +185,8 @@ final class SchedulePickerDialog extends JDialog {
             int year = (Integer) yearSpin.getValue();
             LocalDate date = LocalDate.of(year, month, selectedDay);
             int h = (Integer) hourSpin.getValue();
-            int mi = selectedSlotStartMinute();
-            LocalDateTime ldt = LocalDateTime.of(date, LocalTime.of(h, mi));
+            int mi = (Integer) minuteSpin.getValue();
+            LocalDateTime ldt = LocalDateTime.of(date, java.time.LocalTime.of(h, mi));
             targetField.setText(ScheduleDateTimePicker.DISPLAY.format(ldt));
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Invalid date: " + ex.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
@@ -253,8 +195,8 @@ final class SchedulePickerDialog extends JDialog {
         dispose();
     }
 
-    static void open(Window owner, JTextField targetField, int slotCount) {
-        SchedulePickerDialog d = new SchedulePickerDialog(owner, targetField, slotCount);
+    static void open(Window owner, JTextField targetField) {
+        SchedulePickerDialog d = new SchedulePickerDialog(owner, targetField);
         d.setVisible(true);
     }
 }

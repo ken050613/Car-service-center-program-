@@ -1,10 +1,10 @@
-package apu.bootstrap;
+package com.apu.asc.bootstrap;
 
-import apu.model.Manager;
-import apu.repository.*;
-import apu.service.*;
-import apu.util.IdGenerator;
-import apu.util.PasswordUtil;
+import com.apu.asc.model.Manager;
+import com.apu.asc.repository.*;
+import com.apu.asc.service.*;
+import com.apu.asc.util.IdGenerator;
+import com.apu.asc.util.PasswordUtil;
 
 import java.io.IOException;
 
@@ -48,8 +48,7 @@ public final class AscBootstrap {
         CustomerManagementService customerMgmt = new CustomerManagementService(users, appointments);
         ProfileService profile = new ProfileService(users);
         PricingService pricing = new PricingService(catalog);
-        AccountAuditService accountAudit = new AccountAuditService();
-        AppointmentService appointmentService = new AppointmentService(appointments, users, payments);
+        AppointmentService appointmentService = new AppointmentService(appointments, users);
         PaymentService paymentService = new PaymentService(payments, appointments, catalog, users);
         FeedbackService feedbackService = new FeedbackService(
                 feedback, technicianFeedbackRepo, customerStaffCommentRepo, appointments, users);
@@ -58,6 +57,6 @@ public final class AscBootstrap {
         return new AscServices(users, catalog, appointments, payments, feedback,
                 technicianFeedbackRepo, customerStaffCommentRepo,
                 auth, registration, staffAdmin, customerMgmt, profile, pricing,
-                appointmentService, paymentService, feedbackService, reportService, accountAudit);
+                appointmentService, paymentService, feedbackService, reportService);
     }
 }

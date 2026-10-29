@@ -1,4 +1,4 @@
-package apu.gui;
+package com.apu.asc.gui;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -14,9 +14,9 @@ public class LoginPanel extends JPanel {
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(32, 48, 32, 48));
 
-        JLabel title = new JLabel("APU ASC", SwingConstants.CENTER);
+        JLabel title = new JLabel("APU Automotive Service Centre", SwingConstants.CENTER);
         title.setFont(title.getFont().deriveFont(Font.BOLD, 22f));
-        JLabel sub = new JLabel("Sign in", SwingConstants.CENTER);
+        JLabel sub = new JLabel("Sign in to continue", SwingConstants.CENTER);
         sub.setForeground(new Color(80, 80, 80));
 
         JPanel form = new JPanel(new GridBagLayout());
@@ -35,7 +35,7 @@ public class LoginPanel extends JPanel {
 
         JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 0));
         JButton loginBtn = new JButton("Login");
-        JButton registerBtn = new JButton("Register");
+        JButton registerBtn = new JButton("Register as customer");
         JButton forgotBtn = new JButton("Forgot password");
         loginBtn.addActionListener(e -> doLogin());
         registerBtn.addActionListener(e -> RegisterCustomerDialog.show(frame));

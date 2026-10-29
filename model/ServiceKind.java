@@ -1,4 +1,4 @@
-package apu.model;
+package com.apu.asc.model;
 
 /**
  * Normal service uses a 1-hour slot; major service uses a 3-hour slot (assignment spec).

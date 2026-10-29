@@ -1,4 +1,4 @@
-package apu.model;
+package com.apu.asc.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

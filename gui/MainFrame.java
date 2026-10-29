@@ -1,8 +1,8 @@
-package apu.gui;
+package com.apu.asc.gui;
 
-import apu.bootstrap.AscServices;
-import apu.model.Role;
-import apu.model.User;
+import com.apu.asc.bootstrap.AscServices;
+import com.apu.asc.model.Role;
+import com.apu.asc.model.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,7 +20,7 @@ public class MainFrame extends JFrame {
     private final CustomerPanel customerPanel;
 
     public MainFrame(AscServices services) {
-        super("APU ASC");
+        super("APU Automotive Service Centre (ASC)");
         this.services = services;
 
         loginPanel = new LoginPanel(this);

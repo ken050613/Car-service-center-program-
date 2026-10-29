@@ -1,4 +1,4 @@
-package apu.model;
+package com.apu.asc.model;
 
 public class Manager extends User {
     public Manager(String id, String username, String passwordHash, String fullName, String email) {
