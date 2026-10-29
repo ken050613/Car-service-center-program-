@@ -1,0 +1,116 @@
+APU AUTOMOTIVE SERVICE CENTRE (ASC) - How to Use
+==================================================
+
+This is a Java Swing desktop application for managing a car service
+centre. It has four roles, each with its own dashboard after login:
+
+   - Manager       -> staff management, reports, service catalog
+   - Counter Staff -> register customers, book appointments, take payments
+   - Technician    -> view assigned jobs, update job status, add feedback
+   - Customer      -> register, book appointments, pay, leave feedback
+
+All data is stored in plain text files inside the  data\  folder.
+
+
+BEFORE YOU START (one-time setup)
+==================================
+1. Install JDK 17 (or newer) and Maven.
+   Check:   java -version   and   mvn -version
+2. The project folder looks like this:
+
+         D:\assignment\JAVA\
+            |-- apu-asc\        (the Maven project source)
+            |-- data\           (users.txt, catalog.txt, appointments.txt,
+                                 payments.txt, feedback.txt, ...)
+
+   IMPORTANT: the program reads the "data" folder from wherever you run
+   it (the working directory). So always run the program from the
+   D:\assignment\JAVA\  folder (the one that already contains data\).
+
+
+STEP 1 - Build the project
+===========================
+Open a terminal / Command Prompt and go to the Maven project:
+
+         cd "D:\assignment\JAVA\apu-asc"
+         mvn compile
+
+(You can also open the "apu-asc" folder in NetBeans / IntelliJ / VS Code
+and press Run - the main class is  apu.gui.SwingApp.)
+
+
+STEP 2 - Run the program
+=========================
+Go back to the JAVA root (so the data\ folder is found) and run:
+
+         cd "D:\assignment\JAVA"
+         java -cp apu-asc\target\classes apu.gui.SwingApp
+
+A window titled "APU ASC" will open on the Login screen.
+
+
+STEP 3 - Log in / Register
+===========================
+On the Login screen:
+
+   - Login       : type your Username and Password, then click "Login".
+   - Register    : customers can click "Register" to create their own account.
+   - Forgot password : reset your password with your username and email.
+
+Demo accounts already in data\users.txt (usernames):
+
+         Username   Role
+         --------   ------------------
+         admin      Manager
+         wei        Counter Staff
+         yk         Technician
+         ken        Customer
+         ken123     Customer
+
+   (Passwords are stored hashed - use the password given to you by your
+   lecturer for each account.)
+
+
+STEP 4 - What each role can do
+================================
+MANAGER dashboard:
+   - Manage staff (add / edit / remove Manager, Counter and Technician staff)
+   - View reports (appointments, revenue, jobs)
+   - Manage the service catalog (services / add-ons and prices)
+
+COUNTER STAFF dashboard:
+   - Register new customers
+   - Book / schedule appointments (choose a date/time, service and technician)
+   - Process payments and print receipts
+
+TECHNICIAN dashboard:
+   - View the jobs/appointments assigned to you
+   - Update job status (e.g. In progress -> Completed)
+   - Add feedback / notes on a completed job
+
+CUSTOMER dashboard:
+   - Browse the service catalog
+   - Book an appointment
+   - View your appointments / receipts
+   - Make a payment
+   - Leave feedback
+
+
+TROUBLESHOOTING
+================
+- "java is not recognized"     : JDK is not installed / not on PATH.
+- "mvn is not recognized"      : Maven is not installed / not on PATH.
+- Window says "Failed to start": make sure you ran the program from the
+                                 D:\assignment\JAVA\ folder so it can find
+                                 the data\ folder.
+- "Invalid username or password": check your spelling; use a valid account
+                                 from users.txt.
+- Cannot save data             : the data\ folder must be writable and must
+                                 sit next to where you run the program.
+
+
+IMPORTANT NOTES
+===============
+- This is a desktop (Swing) program, not a website.
+- Keep the data\ folder together with the compiled program.
+- Log out / close the window when you are finished.
